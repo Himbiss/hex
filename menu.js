@@ -20,7 +20,7 @@ var Menu = {
 
 	// Populate the menu screen with some text
 	// and a rotating hexagon as the start button
-	var txt = this.add.text(325, 100, "- Hex -\nClick to start!");
+	var txt = this.add.text(400, 100, "- Hex -\nClick to start!");
 	txt.font = 'bold 16px sans-serif';
 	txt.fontSize = 50;
 
@@ -34,7 +34,7 @@ var Menu = {
 	txt.anchor.y = .5;
 
 	// Add the button and set the over and out functions
-        var btn = this.add.button(325, 300, 'btn_off', this.startGame, this);
+        var btn = this.add.button(400, 300, 'btn_off', this.startGame, this);
 	btn.events.onInputOver.add(buttonHover,this);	
 	btn.events.onInputOut.add(buttonOff,this);
 	btn.anchor.x = .5;
