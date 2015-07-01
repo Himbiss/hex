@@ -17,10 +17,13 @@ var Menu = {
     },
 
     create: function () {
+	// Set a white background
+	game.stage.backgroundColor = '#ffffff';
 
 	// Populate the menu screen with some text
 	// and a rotating hexagon as the start button
 	var txt = this.add.text(400, 100, "- Hex -\nClick to start!");
+	txt.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
 	txt.font = 'bold 16px sans-serif';
 	txt.fontSize = 50;
 

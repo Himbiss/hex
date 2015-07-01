@@ -90,7 +90,7 @@ var Game = {
         // Set up a Phaser controller for keyboard input.
         cursors = game.input.keyboard.createCursorKeys();
 
-        game.stage.backgroundColor = '#808080';
+        game.stage.backgroundColor = '#ffffff';
 
 	// Draw the borders of the board
 	var graphics = game.add.graphics(100, 100);		
@@ -112,6 +112,30 @@ var Game = {
 		}
 		off += hexagonSize/2;
         }
+
+	// Add the players name labels
+	var you_txt = game.add.text(50, 350, "You");
+	you_txt.font = 'bold 16px sans-serif';
+	you_txt.fontSize = 33;
+	you_txt.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+
+	var opponent_txt = game.add.text(600, 50, "Opponent");
+	opponent_txt.font = 'bold 16px sans-serif';
+	opponent_txt.fontSize = 33;
+	opponent_txt.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+
+	var you_grd = you_txt.context.createLinearGradient(0, 0, 0, you_txt.canvas.height);
+	you_grd.addColorStop(0, '#ed2624');
+	you_grd.addColorStop(1, '#992a20');
+	you_txt.fill = you_grd;
+
+	var opponent_grd = opponent_txt.context.createLinearGradient(0, 0, 0, opponent_txt.canvas.height);
+	opponent_grd.addColorStop(0, '#207199');
+	opponent_grd.addColorStop(1, '#2184b4');
+	opponent_txt.fill = opponent_grd;
+
+
+	
     },
 
     update: function() {
