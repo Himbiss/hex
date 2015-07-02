@@ -1,5 +1,5 @@
 // Global variables
-var board, points_p1, points_p2, boardSize, board_off_x, board_off_y;
+var board, points_p1, points_p2, boardSize, board_off_x, board_off_y, you_tween, opponent_tween;
 var ready = false, myTurn = false;
 var eurecaServer;
 var Game;
@@ -30,6 +30,8 @@ var eurecaClientSetup = function() {
 		board[i][j].loadTexture('hex_blue');
 		board[i][j].key = 'hex_blue';
 		myTurn = true;
+		you_tween.resume();
+		opponent_tween.pause();
 	}
 	
 	eurecaClient.exports.opponentQuit = function() {
@@ -54,6 +56,8 @@ function hexClicked(sprite, pointer) {
 	    console.log('clicked hexagon '+sprite.i+' '+sprite.j);
 	    eurecaServer.makeMove(sprite.i,sprite.j);
 	    myTurn = false;
+	    you_tween.pause();
+	    opponent_tween.resume();
 	}
 }
 
@@ -187,6 +191,18 @@ Game = {
 	opponent_grd.addColorStop(0, '#207199');
 	opponent_grd.addColorStop(1, '#2184b4');
 	opponent_txt.fill = opponent_grd;
+
+	// Add tweens to mark which turn it is
+	you_tween = game.add.tween(you_txt.scale).to({x:1.2, y:1.2},2000, Phaser.Easing.Linear.None, true, 0, 9999, true).loop(true);
+	opponent_tween = game.add.tween(opponent_txt.scale).to({x:1.2, y:1.2},2000, Phaser.Easing.Linear.None, true, 0, 9999, true).loop(true);
+
+	if(myTurn) {
+		you_tween.resume();
+		opponent_tween.pause();
+	} else {
+		you_tween.pause();
+		opponent_tween.resume();
+	}
     },
 
 };
