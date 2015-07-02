@@ -1,9 +1,58 @@
+// Global variables
 var board, points_p1, points_p2, boardSize, board_off_x, board_off_y;
+var ready = false, myTurn = false;
+var eurecaServer;
+var Game;
+var won_state = 0; // 0:won, 1:lost, 2:opponentQuit
+
+// Setup the EurecaClient
+var eurecaClientSetup = function() {
+	// Create an instance of eureca.io client
+	var eurecaClient = new Eureca.Client();
+
+	eurecaClient.ready(function (proxy) {
+		console.log("Eureca is ready");
+		eurecaServer = proxy;
+	});
+
+	eurecaClient.exports.setId = function(id) {
+		myId = id;
+	}
+
+	eurecaClient.exports.startGame = function(turn) {
+		myTurn = turn;
+		game.state.start('Game');
+		ready = true;
+		console.log("Started the game, myTurn:%s",myTurn);
+	}
+
+	eurecaClient.exports.makeMove = function(i, j) {
+		board[i][j].loadTexture('hex_blue');
+		myTurn = true;
+	}
+	
+	eurecaClient.exports.opponentQuit = function() {
+		won_state = 2;
+		myTurn = false;
+		game.state.start('Game_Over');
+	}
+
+	eurecaClient.exports.endGame = function(won) {
+		won_state = won ? 0 : 1;
+		myTurn = false;
+		game.state.start('Game_Over');
+	}
+}
+
 
 // Invoked if a hexagon is clicked
 function hexClicked(sprite, pointer) {
-	sprite.loadTexture('hex_red');
-	console.log('clicked a sprite'+sprite.key);
+	if(myTurn) {
+	    sprite.loadTexture('hex_red');
+	    console.log('clicked hexagon '+sprite.i+' '+sprite.j);
+	    eurecaServer.makeMove(sprite.i,sprite.j);
+	    myTurn = false;
+	}
 }
 
 // Draws the top border. Inv inverses the border
@@ -69,7 +118,7 @@ function drawBoardBorderLeft(graphics, color, x, y, inv) {
 }
 
 // Create the game object
-var Game = {
+Game = {
 
     preload : function() {
         // Here we load all the needed resources for the level.
@@ -105,6 +154,8 @@ var Game = {
 		board[i] = [];
 		for(var j = 0; j < boardSize; j++) { 
 			board[i][j] = game.add.sprite(board_off_x+off+j*hexagonSize+j*4, board_off_y+i*hexagonSize-off/4, 'hex_border');
+			board[i][j].i = i;
+			board[i][j].j = j;
 			board[i][j].scale.setTo(hexagonSize/200,hexagonSize/234);
 			board[i][j].inputEnabled = true;
 			board[i][j].userHandCursor = true;
@@ -133,12 +184,6 @@ var Game = {
 	opponent_grd.addColorStop(0, '#207199');
 	opponent_grd.addColorStop(1, '#2184b4');
 	opponent_txt.fill = opponent_grd;
-
-
-	
     },
 
-    update: function() {
-	// TODO: implement
-    }
 };
