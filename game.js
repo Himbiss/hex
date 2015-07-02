@@ -28,6 +28,7 @@ var eurecaClientSetup = function() {
 
 	eurecaClient.exports.makeMove = function(i, j) {
 		board[i][j].loadTexture('hex_blue');
+		board[i][j].key = 'hex_blue';
 		myTurn = true;
 	}
 	
@@ -47,8 +48,9 @@ var eurecaClientSetup = function() {
 
 // Invoked if a hexagon is clicked
 function hexClicked(sprite, pointer) {
-	if(myTurn) {
+	if(myTurn && sprite.key == 'hex_border') {
 	    sprite.loadTexture('hex_red');
+	    sprite.key = 'hex_red';
 	    console.log('clicked hexagon '+sprite.i+' '+sprite.j);
 	    eurecaServer.makeMove(sprite.i,sprite.j);
 	    myTurn = false;
@@ -156,6 +158,7 @@ Game = {
 			board[i][j] = game.add.sprite(board_off_x+off+j*hexagonSize+j*4, board_off_y+i*hexagonSize-off/4, 'hex_border');
 			board[i][j].i = i;
 			board[i][j].j = j;
+			board[i][j].key = 'hex_border';
 			board[i][j].scale.setTo(hexagonSize/200,hexagonSize/234);
 			board[i][j].inputEnabled = true;
 			board[i][j].userHandCursor = true;
