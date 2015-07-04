@@ -57,6 +57,7 @@ checkGameEnd = function(moves) {
 	return gameEnded;
 }
 
+
 checkForPath = function(board, color, i, j, fromTop, path) {
 	// check if indexes are in boundi and if the color is rights
 	if(i<0 || j<0 || i>=boardSize || j>=boardSize || board[i][j] != color)
@@ -82,15 +83,19 @@ checkForPath = function(board, color, i, j, fromTop, path) {
 		hasPath |= checkForPath(board, color, i-1, j+1, fromTop, path); // one down and left
 		hasPath |= checkForPath(board, color, i+1, j, fromTop, path); // one left
 		hasPath |= checkForPath(board, color, i-1, j, fromTop, path); // one right
+		hasPath |= checkForPath(board, color, i, j-1, fromTop, path); // one up
+		hasPath |= checkForPath(board, color, i+1, j-1, fromTop, path); // one up and right
 	} else {
 		// check if we reached the other side
 		if(i == boardSize-1)
 			return true;
 		// search from left to right
 		hasPath |= checkForPath(board, color, i+1, j, fromTop, path); // one right
-		hasPath |= checkForPath(board, color, i+1, j-1, fromTop, path); // one right
-		hasPath |= checkForPath(board, color, i, j-1, fromTop, path); // one right
-		hasPath |= checkForPath(board, color, i, j+1, fromTop, path); // one right
+		hasPath |= checkForPath(board, color, i+1, j-1, fromTop, path); // one right and up
+		hasPath |= checkForPath(board, color, i, j-1, fromTop, path); // one up
+		hasPath |= checkForPath(board, color, i, j+1, fromTop, path); // one down
+		hasPath |= checkForPath(board, color, i-1, j, fromTop, path); // one left
+		hasPath |= checkForPath(board, color, i-1, j+1, fromTop, path); // one left and down
 	}
 	return hasPath;
 }
